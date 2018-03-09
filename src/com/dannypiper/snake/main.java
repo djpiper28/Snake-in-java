@@ -48,7 +48,6 @@ public class main extends Canvas {
 		}
 		segmentX.removeAll(segmentX);
 		segmentY.removeAll(segmentY);
-		score = 0;
 		segmentX.add(400);
 		segmentY.add(400);
 		segmentX.add(420);
@@ -71,6 +70,7 @@ public class main extends Canvas {
 		frame.setName("Snake");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add("Center", canvas);
+		canvas.createBufferStrategy(2);
 		initSnakeSegments();
 		//controls
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -191,6 +191,24 @@ public class main extends Canvas {
 				if(segmentY.get(i)<0) {
 					segmentY.set(i, 780);
 				}
+				if(segmentX.get(i)==segmentX.get(segmentX.size()-1)
+						&& segmentY.get(i)==segmentY.get(segmentY.size()-1)
+						&& segmentX.size()-1 != i) {
+					status = state.STOPPED;	//Died
+					score = segmentX.size();
+					initSnakeSegments();
+					initApple();
+				}
+				int a = segmentX.size();
+				if(i==a-1) {
+					if(segmentX.get(a-2)==segmentX.get(i)
+							&& segmentY.get(a-2)==segmentY.get(i)) {
+						status = state.STOPPED;	//Died
+						score = segmentX.size();
+						initSnakeSegments();
+						initApple();
+					}
+				}
 			}
 			g.setColor(Color.RED);
 			g.drawRect(appleX, appleY, 20, 20);
@@ -201,10 +219,11 @@ public class main extends Canvas {
 			g.setColor(Color.WHITE);
 			g.drawString(String.valueOf(score), 400, 400);
 			try {
-				Thread.sleep(500);
+				Thread.sleep(900);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			score = 0;
 		}
 	}
 
