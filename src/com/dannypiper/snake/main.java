@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -98,11 +99,11 @@ public class main extends Canvas {
 		while(true) {
 			canvas.repaint();
 			//movement
-			
+			long a = System.currentTimeMillis();
 			if(status == state.TITLESCREEN) {
 				status = state.PLAYING;
 				System.out.print("PLAYING");
-				Thread.sleep(500);
+				Thread.sleep(900);
 			}
 			if(status == state.PLAYING) {
 				for (int i = 0; i<segmentX.size()-1 ; i++) {
@@ -160,7 +161,9 @@ public class main extends Canvas {
 				}
 			}
 			//wait for next frame
-			Thread.sleep(frameRate);
+			while(System.currentTimeMillis() - a < frameRate) {
+				
+			}
 		}
 	}
 	public void paint(Graphics g) {
@@ -176,6 +179,8 @@ public class main extends Canvas {
 		}else if(status == state.PLAYING) {
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, 800, 800);
+			g.setColor(Color.RED);
+			g.drawRect(appleX, appleY, 20, 20);
 			for (int i = 0; i<segmentX.size(); i++) {
 				g.setColor(Color.WHITE);
 				g.drawRect(segmentX.get(i), segmentY.get(i), 20, 20);
@@ -210,8 +215,6 @@ public class main extends Canvas {
 					}
 				}
 			}
-			g.setColor(Color.RED);
-			g.drawRect(appleX, appleY, 20, 20);
 		} else if(status == state.STOPPED) {
 			status = state.PLAYING;
 			g.setColor(Color.RED);
